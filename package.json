@@ -1,0 +1,31 @@
+{
+  "name": "libvirt-node",
+  "version": "0.0.1",
+  "description": "The libvirt virtualization API node.js binding",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RamyElkest/libvirt-node.git"
+  },
+  "keywords": [
+    "libvirt",
+    "virt",
+    "virtualization",
+    "kvm",
+    "qemu",
+    "napi"
+  ],
+  "author": "Libvirt Maintainers",
+  "license": "LGPL-2.0+",
+  "bugs": {
+    "url": "https://github.com/RamyElkest/libvirt-node/issues"
+  },
+  "homepage": "https://github.com/RamyElkest/libvirt-node#readme",
+  "gypfile": true,
+  "dependencies": {
+    "bindings": "^1.3.0"
+  }
+}
