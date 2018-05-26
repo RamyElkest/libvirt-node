@@ -10,9 +10,10 @@ napi_value Init(napi_env env, napi_value exports) {
       DECLARE_NAPI_METHOD("virConnectOpen", libvirt_virConnectOpen),
       DECLARE_NAPI_METHOD("virConnectClose", libvirt_virConnectClose),
       DECLARE_NAPI_METHOD("virDomainLookupByName", libvirt_virDomainLookupByName),
-      DECLARE_NAPI_METHOD("virDomainGetID", libvirt_virDomainGetID)
+      DECLARE_NAPI_METHOD("virDomainGetID", libvirt_virDomainGetID),
+      DECLARE_NAPI_METHOD("virConnectRegisterCloseCallback", libvirt_virConnectRegisterCloseCallback)
   };
-  status = napi_define_properties(env, exports, 4, descs);
+  status = napi_define_properties(env, exports, 5, descs);
   assert(status == napi_ok);
   return exports;
 }

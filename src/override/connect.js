@@ -49,15 +49,33 @@ close() {
     return ret;
 }
 
-getURI() {
-
+/**
+ * Registers a callback to be invoked when the connection
+ * is closed. This callback is invoked when there is any
+ * condition that causes the socket connection to the
+ * hypervisor to be closed.
+ *
+ * This function is only applicable to hypervisor drivers
+ * which maintain a persistent open connection. Drivers
+ * which open a new connection for every operation will
+ * not invoke this.
+ *
+ * The @freecb must not invoke any other libvirt public
+ * APIs, since it is not called from a re-entrant safe
+ * context.
+ *
+ * @param {Function} Callback to be invoked
+ * @param {Array} callback parameters
+ * @return {Integer} 0 on success, -1 on error
+ *
+ */
+registerCloseCallback(callback, params) {
+    let cbData = {
+        'conn': this.conn,
+        'cb': () => {console.log('YES!');},
+        'cb_args': 9999
+    }
+    let ret = libvirt_native.virConnectRegisterCloseCallback(this.conn, cbData);
+    if(ret === null) throw new Error('virConnectClose() failed');
+    return ret;
 }
-
-registerCloseCallback() {
-
-}
-// Domain
-//   virDomainGetID
-//   virDomainCreateXML
-//   virDomainGetVcpusFlags
-//   virDomainLookupByName
