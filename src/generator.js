@@ -1,195 +1,96 @@
 let fs = require('fs');
 
 // Create generated folder
+let src_path = 'src';
 let generated_path = 'generated';
+let override_path = `${src_path}/override`;
+let manual_path = `${src_path}/manual`;
+
 try {
 	fs.statSync(generated_path);
 } catch ( ex ) {
 	fs.mkdirSync(generated_path);
 }
 
-// libvirt.h
+// Copy manual files
+let manual_files = fs.readdirSync(`${manual_path}`);
+manual_files.forEach((manual_file) => {
+  fs.copyFileSync(`${manual_path}/${manual_file}`, `${generated_path}/${manual_file}`);
+});
 
-let hpp = 
-`#pragma once
+let files = [
+  'connect',
+  'domain'
+]
+
+/* Write header files */
+files.forEach((header_file) => {
+  let generated_headers = '';
+  let override_headers = fs.readFileSync(`${override_path}/${header_file}.h`);
+
+  let hpp = `
+#pragma once
 
 #include <node_api.h>
 
-napi_value libvirt_virConnectOpen(napi_env env, napi_callback_info info);
+/* The following declarations are generated */
+${generated_headers}
 
-napi_value libvirt_virDomainLookupByName(napi_env env, napi_callback_info info);
-napi_value libvirt_virDomainGetID(napi_env env, napi_callback_info info);
+/* The following declarations are overridden */
+${override_headers}
 `;
 
-fs.writeFileSync(`${generated_path}/libvirt.h`, hpp);
+  fs.writeFileSync(`${generated_path}/${header_file}.h`, hpp);
+});
 
-// libvirt.c
 
-let cpp = 
-`
-#include "libvirt.h"
+/* Write implementation files */
+files.forEach((impl_file) => {
+
+  let generated_impl = '';
+  let override_impl = fs.readFileSync(`${override_path}/${impl_file}.c`);
+
+  let cpp = `
+#include "${impl_file}.h"
 #include <assert.h>
 #include <libvirt/libvirt.h>
 
-napi_value libvirt_virConnectOpen(napi_env env, napi_callback_info info) {
-  size_t argc = 1;
-  napi_status status;
-  napi_value args[argc], n_retval;
-  napi_valuetype valuetype;
-  virConnectPtr c_retval;
+/* The following implementations are generated */
+${generated_impl}
 
-  status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
-  assert(status == napi_ok);
-
-  if (argc > 1) {
-    napi_throw_range_error(env, NULL, "Wrong number of arguments");
-    return NULL;
-  }
-
-  status = napi_typeof(env, args[0], &valuetype);
-  assert(status == napi_ok);
-
-  if (valuetype == napi_undefined) {
-    c_retval = virConnectOpen(NULL);
-  } else if (valuetype == napi_string) {
-    size_t length;
-
-    status = napi_get_value_string_utf8(env, args[0], NULL, 0, &length);
-    assert(status == napi_ok);
-
-    char name[length+1];
-    status = napi_get_value_string_utf8(env, args[0], name, sizeof(name), NULL);
-    assert(status == napi_ok);
-
-    c_retval = virConnectOpen(name);
-  } else {
-    napi_throw_type_error(env, NULL, "Wrong argument type");
-    return NULL;
-  }
-
-  if (c_retval == NULL) {
-    status = napi_get_null(env, &n_retval);
-    assert(status == napi_ok);
-    return n_retval;
-  }
-
-  status = napi_create_external(env, c_retval, NULL, NULL, &n_retval);
-  assert(status == napi_ok);
-
-  return n_retval;
-}
-
-napi_value libvirt_virDomainLookupByName(napi_env env, napi_callback_info info) {
-  size_t argc = 2;
-  napi_status status;
-  napi_value n_retval, args[argc];
-  napi_valuetype valuetype;
-
-  status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
-  assert(status == napi_ok);
-
-  if (argc != 2) {
-    napi_throw_type_error(env, NULL, "Wrong number of arguments");
-    return NULL;
-  }
-
-  // arg0
-  status = napi_typeof(env, args[0], &valuetype);
-  assert(status == napi_ok);
-  if (valuetype != napi_external) {
-    napi_throw_type_error(env, NULL, "Wrong argument type");
-    return NULL;
-  }
-
-  virConnectPtr conn = NULL;
-  status = napi_get_value_external(env, args[0], (void**)&conn);
-  assert(status == napi_ok);
-  assert(conn);
-
-  // arg1
-  status = napi_typeof(env, args[1], &valuetype);
-  assert(status == napi_ok);
-
-  if (valuetype != napi_string) {
-    napi_throw_type_error(env, NULL, "Wrong argument type");
-    return NULL;
-  }
-
-  size_t length;
-  status = napi_get_value_string_utf8(env, args[1], NULL, 0, &length);
-  assert(status == napi_ok);
-
-  char name[length+1];
-  status = napi_get_value_string_utf8(env, args[1], name, sizeof(name), NULL);
-  assert(status == napi_ok);
-
-  virDomainPtr c_retval;
-  c_retval = virDomainLookupByName(conn, name);
-
-  if (c_retval == NULL) {
-    status = napi_get_null(env, &n_retval);
-    assert(status == napi_ok);
-    return n_retval;
-  }
-
-  status = napi_create_external(env, c_retval, NULL, NULL, &n_retval);
-  assert(status == napi_ok);
-
-  return n_retval;
-}
-
-napi_value libvirt_virDomainGetID(napi_env env, napi_callback_info info) {
-    napi_status status;
-    napi_value n_retval;
-    napi_valuetype valuetype;
-
-    size_t argc = 1;
-    napi_value args[1];
-    status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
-    assert(status == napi_ok);
-
-    if (argc != 1) {
-      napi_throw_type_error(env, NULL, "Wrong number of arguments");
-      return NULL;
-    }
-
-    // arg0
-    status = napi_typeof(env, args[0], &valuetype);
-    assert(status == napi_ok);
-    if (valuetype != napi_external) {
-      napi_throw_type_error(env, NULL, "Wrong argument type");
-      return NULL;
-    }
-
-    virDomainPtr domain = NULL;
-    status = napi_get_value_external(env, args[0], (void**)&domain);
-    assert(status == napi_ok);
-    assert(domain);
-
-    unsigned int c_retval = virDomainGetID(domain);
-    status = napi_create_int32(env, c_retval, &n_retval);
-    assert(status == napi_ok);
-
-    return n_retval;
-}
-
-#define DECLARE_NAPI_METHOD(name, func)                          \
-  { name, 0, func, 0, 0, 0, napi_default, 0 }
-
-napi_value Init(napi_env env, napi_value exports) {
-  napi_status status;
-  napi_property_descriptor descs[] = {
-      DECLARE_NAPI_METHOD("virConnectOpen", libvirt_virConnectOpen),
-      DECLARE_NAPI_METHOD("virDomainLookupByName", libvirt_virDomainLookupByName),
-      DECLARE_NAPI_METHOD("virDomainGetID", libvirt_virDomainGetID)
-  };
-  status = napi_define_properties(env, exports, 3, descs);
-  assert(status == napi_ok);
-  return exports;
-}
-
-NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
-
+/* The following implementations are overridden */
+${override_impl}
 `;
 
-fs.writeFileSync(`${generated_path}/libvirt.c`, cpp);
+  fs.writeFileSync(`${generated_path}/${impl_file}.c`, cpp);
+
+});
+
+
+/* Write js wrapper files */
+files.forEach((js_file) => {
+
+  let class_name = 'vir' + js_file[0].toUpperCase() + js_file.slice(1);
+  let generated_js = '';
+  let override_js = fs.readFileSync(`${override_path}/${js_file}.js`);
+
+  let cpp = `
+let libvirt_native = require('bindings')('libvirt');
+${js_file !== 'domain' ? "let virDomain = require('./domain');" : ''} // TODO: remove require virDomain hack
+
+class ${class_name} {
+
+/* The following functions are generated */
+${generated_js}
+
+/* The following functions are overridden */
+${override_js}
+
+}
+
+module.exports = ${class_name}
+`;
+
+  fs.writeFileSync(`${generated_path}/${js_file}.js`, cpp);
+
+});
