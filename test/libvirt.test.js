@@ -12,6 +12,7 @@ assert.doesNotThrow(() => test_virConnectOpen('test:///default'), 'connect with 
 assert.doesNotThrow(() => test_virConnectOpen('test:///default', 2, 'Three', 4), 'connect with too many arguments');
 assert.throws(() => test_virConnectOpen('malformed'), 'connect with malformed uri');
 assert.throws(() => test_virConnectOpen(7), 'connect with wrong argument type');
+assert.strictEqual(libvirt.open('test:///default').close(), 0);
 
 // virDomain
 function test_virDomainLookupByName(...args) {
