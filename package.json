@@ -4,7 +4,16 @@
   "description": "The libvirt virtualization API node.js binding",
   "main": "index.js",
   "scripts": {
-    "test": "node test/libvirt.test.js"
+    "preinstall": "npm run check & npm run generate",
+    "install": "node-gyp configure build",
+    "prebuild": "npm run clean && npm run generate",
+    "build": "node-gyp rebuild",
+    "test": "node test/libvirt.test.js",
+    "clean": "rimraf build & rimraf generated",
+    "generate": "node src/generator.js",
+    "check:libvirt_api_xml": "node tools/api_xml_files.js",
+    "check:libvirt_min_ver": "node tools/check_min_libvirt_ver.js",
+    "check": "npm run check:libvirt_min_ver & npm run check:libvirt_api_xml"
   },
   "repository": {
     "type": "git",

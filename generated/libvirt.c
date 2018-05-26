@@ -1,3 +1,4 @@
+
 #include "libvirt.h"
 #include <assert.h>
 #include <libvirt/libvirt.h>
@@ -144,8 +145,7 @@ napi_value libvirt_virDomainGetID(napi_env env, napi_callback_info info) {
     return n_retval;
 }
 
-#define DECLARE_NAPI_METHOD(name, func)                          \
-  { name, 0, func, 0, 0, 0, napi_default, 0 }
+#define DECLARE_NAPI_METHOD(name, func)                            { name, 0, func, 0, 0, 0, napi_default, 0 }
 
 napi_value Init(napi_env env, napi_value exports) {
   napi_status status;
@@ -160,3 +160,4 @@ napi_value Init(napi_env env, napi_value exports) {
 }
 
 NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
+
