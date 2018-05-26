@@ -29,6 +29,7 @@
   "homepage": "https://github.com/RamyElkest/libvirt-node#readme",
   "gypfile": true,
   "dependencies": {
-    "bindings": "^1.3.0"
+    "bindings": "^1.3.0",
+    "node-addon-api": "file:../napi-ex/node_modules/node-addon-api"
   }
 }

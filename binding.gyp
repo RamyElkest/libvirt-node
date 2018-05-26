@@ -3,7 +3,12 @@
     {
       "target_name": "libvirt",
       'product_prefix': 'lib',
-      "sources": [ "src/libvirt.c" ],
+      "sources": [
+          "src/libvirt.c",
+          "src/hypervisor.cc",
+          "src/domain.cc",
+        ],
+      'include_dirs' : ['../napi-ex/node_modules/node-addon-api' ],
       'conditions': [
         ['OS!="win"', {
           'link_settings': {
