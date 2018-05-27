@@ -5,7 +5,7 @@
       'product_prefix': 'lib',
       "sources": [ 
         'generated/libvirt.c',
-        'generated/connect.c',
+        'generated/host.c',
         'generated/domain.c',
       ],
       'conditions': [

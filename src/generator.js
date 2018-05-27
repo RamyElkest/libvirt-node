@@ -1,4 +1,7 @@
 let fs = require('fs');
+let {libvirt_parser} = require('./parser');
+let gen_headers = require('./gen_headers');
+let gen_impl = require('./gen_impl');
 
 // Create generated folder
 let src_path = 'src';
@@ -19,13 +22,13 @@ manual_files.forEach((manual_file) => {
 });
 
 let files = [
-  'connect',
+  'host',
   'domain'
 ]
 
 /* Write header files */
 files.forEach((header_file) => {
-  let generated_headers = '';
+  let generated_headers = gen_headers.generate(libvirt_parser, header_file);
   let override_headers = fs.readFileSync(`${override_path}/${header_file}.h`);
 
   let hpp = `
@@ -47,7 +50,7 @@ ${override_headers}
 /* Write implementation files */
 files.forEach((impl_file) => {
 
-  let generated_impl = '';
+  let generated_impl = gen_impl.generate(libvirt_parser, impl_file);
   let override_impl = fs.readFileSync(`${override_path}/${impl_file}.c`);
 
   let cpp = `
