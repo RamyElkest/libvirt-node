@@ -1,6 +1,10 @@
-let allowed_functions = {
-	'virConnectOpen': 1,
-};
+let allowed_functions = new Set([
+	'virConnectOpen',
+	'virConnectClose',
+	'virConnectGetURI',
+	'virDomainLookupByName',
+	'virDomainGetID',
+]);
 
 module.exports = {
 	allowed_functions,
