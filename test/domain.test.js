@@ -26,4 +26,5 @@ let test_xml = `
   let conn = libvirt.open('test:///default');
   let domain = conn.createXML(xml, 0);
   assert.strictEqual(domain.getOSType(), "linux");
+  assert.strictEqual(domain.getVcpusFlags(0), 1);
 })(test_xml);

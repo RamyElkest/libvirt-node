@@ -6,6 +6,7 @@ let allowed_functions = {
 	'virDomainGetID': 'domain',
 	'virDomainCreateXML': 'host',
 	'virDomainGetOSType': 'domain',
+	'virDomainGetVcpusFlags': 'domain',
 };
 
 module.exports = {
