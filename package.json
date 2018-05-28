@@ -4,7 +4,7 @@
   "description": "The libvirt virtualization API node.js binding",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/libvirt.test.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,9 @@
   "license": "LGPL-2.0+",
   "bugs": {
     "url": "https://github.com/RamyElkest/libvirt-node/issues"
+  },
+  "engines": {
+    "node": ">= 8.0.0"
   },
   "homepage": "https://github.com/RamyElkest/libvirt-node#readme",
   "gypfile": true,
