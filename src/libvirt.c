@@ -1,6 +1,5 @@
 #include "libvirt.h"
 #include <assert.h>
-#include <string.h>
 #include <libvirt/libvirt.h>
 
 napi_value libvirt_virConnectOpen(napi_env env, napi_callback_info info) {
