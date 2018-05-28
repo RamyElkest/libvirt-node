@@ -4,6 +4,7 @@ module.exports = new class {
       'napi_string': this.genString,
       'napi_int32': this.genInt32,
       'napi_uint32': this.genUint32,
+      'napi_int64': this.genInt64,
       'napi_external': this.genExternal,
     }
   }
@@ -17,12 +18,12 @@ module.exports = new class {
 
   genString(arg, idx) {
     return `
-      size_t length;
+      size_t arg${idx}_len = 0;
   
-      status = napi_get_value_string_utf8(env, args[${idx}], NULL, 0, &length);
+      status = napi_get_value_string_utf8(env, args[${idx}], NULL, 0, &arg${idx}_len);
       assert(status == napi_ok);
   
-      char arg${idx}[length+1];
+      char arg${idx}[arg${idx}_len+1];
       status = napi_get_value_string_utf8(env, args[${idx}], arg${idx}, sizeof(arg${idx}), NULL);
       assert(status == napi_ok);
     `;
@@ -42,6 +43,15 @@ module.exports = new class {
       ${arg.type} arg${idx} = 0;
 
       status = napi_get_value_uint32(env, args[${idx}], &arg${idx});
+      assert(status == napi_ok);
+    `;
+  }
+
+  genInt64(arg, idx) {
+    return `
+      ${arg.type} arg${idx} = 0;
+
+      status = napi_get_value_int64(env, args[${idx}], (int64_t *)&arg${idx});
       assert(status == napi_ok);
     `;
   }

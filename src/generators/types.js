@@ -8,8 +8,10 @@ let CObjects = {
 let CNumbers = {
     'int'          : 'napi_int32',
     'long'         : 'napi_int64',
+    'long long'    : 'napi_int64',
     'unsigned int' : 'napi_uint32',
-    'unsigned long': 'napi_uint64',
+    'unsigned long': 'napi_int64',
+    'unsigned long long': 'napi_int64',
 }
 
 let CTypes = {
@@ -21,6 +23,7 @@ let NapiCreateFuncs = {
     'napi_external': 'napi_create_external(env, c_retval, NULL, NULL, &n_retval)',
     'napi_int32': 'napi_create_int32(env, c_retval, &n_retval)',
     'napi_uint32': 'napi_create_uint32(env, c_retval, &n_retval)',
+    'napi_int64': 'napi_create_int64(env, c_retval, &n_retval)',
     'napi_string': 'napi_create_string_utf8(env, c_retval, strlen(c_retval), &n_retval)',
 };
 
