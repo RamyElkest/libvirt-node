@@ -159,6 +159,24 @@ class WrapperDescriptor extends FileDescriptor {
              ${this.options.static} ${this.options.emitter.emit(func.name, func)}`
         );
     }
+
+    /**
+     * Processes parsed enums metadata to generate docs and content
+     *
+     * @param {string} enums type
+     * @param {array} list of enums metadata from parser for this type
+     */
+    processEnums(enumsType, enums) {
+        debug(`descriptors:${this.args.name}:${this.args.type}`)(`Processing enum:${enumsType}`);
+
+        this.addContent(`/** ${enumsType} **/`);
+        enums.forEach(enumDesc => {
+            this.addContent(
+                `${this.options.emitter.emit('enum:'+enumDesc.name+':docs', enumDesc)}
+                 ${this.options.static} ${this.options.emitter.emit('enum:'+enumDesc.name, enumDesc)}`
+            );
+        });
+    }
 }
 
 // let wd = new WrapperDescriptor({name: 'domain'});
