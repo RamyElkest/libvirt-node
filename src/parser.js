@@ -17,6 +17,9 @@ class ApiParser {
     parseAll() {
         if(this.raw_json.api.symbols[0].enum) {
             this.parseEnums(this.raw_json.api.symbols[0].enum);
+            Object.values(this.enums).forEach(enumArr => {
+                enumArr.sort((a, b) => a.value - b.value)
+            });
         }
 
         this.parseFunctions(this.raw_json.api.symbols[0].function);
