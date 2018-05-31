@@ -4,9 +4,9 @@ const { CObjects } = require('../types');
 wrapper_emitter.register('vir[\\w]+ListAll[\\w]+', data => {
     let classType = data.args[1].type.replace(' **', '');
     let out =
-       `${data.iname}(flags)
+       `${data.iname}(flags = 0)
         {
-            let retList = libvirt_native.${data.name}(this.${data.args[0].name}, flags = 0);
+            let retList = libvirt_native.${data.name}(this.${data.args[0].name}, flags);
             if(retList == null) throw new Error('${data.name}() failed');
 
             return retList.map(ret => new ${CObjects[classType].cons});
