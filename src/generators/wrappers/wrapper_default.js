@@ -15,7 +15,7 @@ wrapper_emitter.register('vir[\\w]+ListAll[\\w]+', data => {
 });
 
 wrapper_emitter.registerDefault(data => {
-    let c_arg = (arg) => `${CObjects.hasOwnProperty(arg.type) ? CObjects[arg.type].arg : arg.name}`;
+    let c_arg = (arg) => `${CObjects.hasOwnProperty(arg.type) ? 'this.'+CObjects[arg.type].name : arg.name}`;
     let out =
        `${data.iname}(${data.args.filter(arg => !CObjects.hasOwnProperty(arg.type))
                                                   .map(arg =>  arg.name)
