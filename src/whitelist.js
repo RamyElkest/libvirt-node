@@ -7,6 +7,18 @@ let whitelist = new Set([
 	'virDomainCreateXML',
 	'virDomainGetOSType',
 	'virDomainGetVcpusFlags',
+
+	/** ListAll **/
+	"virConnectListAllDomains",
+	"virConnectListAllInterfaces",
+	"virConnectListAllNetworks",
+	"virConnectListAllNodeDevices",
+	"virConnectListAllNWFilters",
+	"virConnectListAllSecrets",
+	"virConnectListAllStoragePools",
+	"virDomainListAllSnapshots",
+	"virDomainSnapshotListAllChildren",
+	"virStoragePoolListAllVolumes",
 ]);
 
 module.exports = {
