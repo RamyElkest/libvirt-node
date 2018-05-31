@@ -10,12 +10,13 @@ impl_emitter.registerDefault((func) => {
        `napi_value libvirt_${func.name}(napi_env env, napi_callback_info info) {
             napi_status status;
             napi_value n_retval;
-            napi_valuetype valuetype;
        `;
 
     if(func.args.length) {
 
         out += `
+            napi_valuetype valuetype;
+
             // get callback_info
             size_t argc = ${func.args.length};
             napi_value args[argc];
