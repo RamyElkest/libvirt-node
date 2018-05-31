@@ -2,16 +2,17 @@
 
 let CObjects = {
     'virConnectPtr': { cons: 'virConnect(ret)',                     arg: 'this.conn',           type: 'virConnect' },
-    'virDomainPtr' : { cons: 'virDomain(this, ret)',                arg: 'this.domain',         type: 'virDomain' },
-    'virNetworkPtr': { cons: 'virNetwork(this, ret)',               arg: 'this.network',        type: 'virNetwork' },
-    'virInterfacePtr': { cons: 'virInterface(this, ret)',           arg: 'this.interface',      type: 'virInterface' },
-    'virStoragePoolPtr': { cons: 'virStoragePool(this, ret)',       arg: 'this.storagePool',    type: 'virStoragePool' },
-    'virStorageVolPtr': { cons: 'virStorageVol(this, ret)',         arg: 'this.storageVol',     type: 'virStorageVol' },
-    'virNodeDevicePtr': { cons: 'virNodeDevice(this, ret)',         arg: 'this.nodeDevice',     type: 'virNodeDevice' },
-    'virSecretPtr': { cons: 'virSecret(this, ret)',                 arg: 'this.secret',         type: 'virSecret' },
-    'virNWFilterPtr': { cons: 'virNWFilter(this, ret)',             arg: 'this.nWFilter',       type: 'virNWFilter' },
-    'virStreamPtr': { cons: 'virStream(this, ret)',                 arg: 'this.stream',         type: 'virStream' },
-    'virDomainSnapshotPtr': { cons: 'virDomainSnapshot(this, ret)', arg: 'this.domainSnapshot', type: 'virDomainSnapshot' }
+    'virDomainPtr' : { cons: 'virDomain(this.conn, ret)',                arg: 'this.domain',         type: 'virDomain' },
+    'virNetworkPtr': { cons: 'virNetwork(this.conn, ret)',               arg: 'this.network',        type: 'virNetwork' },
+    'virInterfacePtr': { cons: 'virInterface(this.conn, ret)',           arg: 'this.interface',      type: 'virInterface' },
+    'virStoragePoolPtr': { cons: 'virStoragePool(this.conn, ret)',       arg: 'this.storagePool',    type: 'virStoragePool' },
+    'virStorageVolPtr': { cons: 'virStorageVol(this.conn, ret)',         arg: 'this.storageVol',     type: 'virStorageVol' },
+    'virNodeDevicePtr': { cons: 'virNodeDevice(this.conn, ret)',         arg: 'this.nodeDevice',     type: 'virNodeDevice' },
+    'virSecretPtr': { cons: 'virSecret(this.conn, ret)',                 arg: 'this.secret',         type: 'virSecret' },
+    'virNWFilterPtr': { cons: 'virNWFilter(this.conn, ret)',             arg: 'this.nWFilter',       type: 'virNWFilter' },
+    'virStreamPtr': { cons: 'virStream(this.conn, ret)',                 arg: 'this.stream',         type: 'virStream' },
+    'virDomainSnapshotPtr': { cons: 'virDomainSnapshot(this.conn, this.domain, ret)',
+                                                                         arg: 'this.domainSnapshot', type: 'virDomainSnapshot' }
 };
 
 let CNumbers = {
