@@ -226,6 +226,7 @@ class ImplDescriptor extends FileDescriptor {
                     dependencies: [
                         `#include "${args.name}.h"`,
                         `#include <libvirt/libvirt.h>`,
+                        `#include <libvirt/virterror.h>`, // TODO(ramyelkest@gmail.com): is this needed?
                         `#include <assert.h>`,
                         `#include <string.h>`,
                     ],
