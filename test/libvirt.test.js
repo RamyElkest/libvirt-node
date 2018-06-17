@@ -8,7 +8,6 @@ function test_virConnectOpen(...args) {
   let conn = libvirt.open(...args);
 }
 
-assert.doesNotThrow(() => test_virConnectOpen(), 'connect with no uri');
 assert.doesNotThrow(() => test_virConnectOpen('test:///default'), 'connect with default uri');
 assert.doesNotThrow(() => test_virConnectOpen('test:///default', 2, 'Three', 4), 'connect with too many arguments');
 assert.throws(() => test_virConnectOpen('malformed'), 'connect with malformed uri');

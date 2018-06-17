@@ -4,8 +4,8 @@
   "description": "The libvirt virtualization API node.js binding",
   "main": "index.js",
   "scripts": {
-    "preinstall": "npm run check & npm run generate",
-    "install": "node-gyp configure build",
+    "install": "npm run check & npm run generate",
+    "postinstall": "node-gyp rebuild",
     "prebuild": "npm run clean && npm run generate",
     "build": "node-gyp rebuild",
     "test": "node test/libvirt.test.js",
