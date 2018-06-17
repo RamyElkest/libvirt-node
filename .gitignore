@@ -32,6 +32,9 @@ bower_components
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/
 
+# generated files
+generated/
+
 # Dependency directories
 node_modules/
 jspm_packages/

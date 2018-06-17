@@ -1,3 +1,32 @@
+let fs = require('fs');
+
+// Create generated folder
+let generated_path = 'generated';
+try {
+	fs.statSync(generated_path);
+} catch ( ex ) {
+	fs.mkdirSync(generated_path);
+}
+
+// libvirt.h
+
+let hpp = 
+`#pragma once
+
+#include <node_api.h>
+
+napi_value libvirt_virConnectOpen(napi_env env, napi_callback_info info);
+
+napi_value libvirt_virDomainLookupByName(napi_env env, napi_callback_info info);
+napi_value libvirt_virDomainGetID(napi_env env, napi_callback_info info);
+`;
+
+fs.writeFileSync(`${generated_path}/libvirt.h`, hpp);
+
+// libvirt.c
+
+let cpp = 
+`
 #include "libvirt.h"
 #include <assert.h>
 #include <libvirt/libvirt.h>
@@ -160,3 +189,7 @@ napi_value Init(napi_env env, napi_value exports) {
 }
 
 NAPI_MODULE(NODE_GYP_MODULE_NAME, Init)
+
+`;
+
+fs.writeFileSync(`${generated_path}/libvirt.c`, cpp);
