@@ -1,0 +1,38 @@
+language: node_js
+os: linux
+
+node_js:
+  - '8'
+  - '10'
+
+env:
+  global:
+    - LD_LIBRARY_PATH=${TRAVIS_BUILD_DIR}/libvirt-vroot/lib
+    - PKG_CONFIG_PATH=${TRAVIS_BUILD_DIR}/libvirt-vroot/lib/pkgconfig
+  matrix:
+    - LIBVIRT=3.6.0 EXT=xz
+
+install:
+  - sudo apt-get -qqy build-dep libvirt libxml2-dev
+  - sudo apt-get -qqy install curl
+  - curl -O -s https://libvirt.org/sources/libvirt-${LIBVIRT}.tar.${EXT}
+  - tar -xf libvirt-${LIBVIRT}.tar.${EXT}
+  - pushd libvirt-${LIBVIRT}
+  - |
+        ./configure --prefix=`pwd`/../libvirt-vroot \
+                    --without-libvirtd \
+                    --without-esx \
+                    --without-vbox \
+                    --without-libxl \
+                    --without-xen \
+                    --without-qemu \
+                    --without-lxc \
+                    --without-hyperv \
+                    --without-macvtap \
+                    --disable-werror
+  - make -j3
+  - make install
+  - popd
+
+script:
+  - make && make check
