@@ -32,43 +32,42 @@ let cpp =
 #include <libvirt/libvirt.h>
 
 napi_value libvirt_virConnectOpen(napi_env env, napi_callback_info info) {
-  napi_status status;
-  napi_value n_retval;
-  napi_valuetype valuetype;
-
   size_t argc = 1;
-  napi_value args[1];
+  napi_status status;
+  napi_value args[argc], n_retval;
+  napi_valuetype valuetype;
+  virConnectPtr c_retval;
+
   status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
   assert(status == napi_ok);
 
   if (argc > 1) {
-    napi_throw_type_error(env, NULL, "Wrong number of arguments");
+    napi_throw_range_error(env, NULL, "Wrong number of arguments");
     return NULL;
   }
 
   status = napi_typeof(env, args[0], &valuetype);
   assert(status == napi_ok);
 
-  if (valuetype != napi_undefined && valuetype != napi_string) {
+  if (valuetype == napi_undefined) {
+    c_retval = virConnectOpen(NULL);
+  } else if (valuetype == napi_string) {
+    size_t length;
+
+    status = napi_get_value_string_utf8(env, args[0], NULL, 0, &length);
+    assert(status == napi_ok);
+
+    char name[length+1];
+    status = napi_get_value_string_utf8(env, args[0], name, sizeof(name), NULL);
+    assert(status == napi_ok);
+
+    c_retval = virConnectOpen(name);
+  } else {
     napi_throw_type_error(env, NULL, "Wrong argument type");
     return NULL;
   }
 
-  char* name = NULL;
-
-  if(valuetype == napi_string) {
-    char buffer[128];
-    size_t buffer_size = 128;
-    size_t copied;
-    status = napi_get_value_string_utf8(env, args[0], buffer, buffer_size, &copied);
-    assert(status == napi_ok);
-    name = buffer;
-  }
-
-  virConnectPtr c_retval;
-  c_retval = virConnectOpen(name);
-
-  if(c_retval == NULL) {
+  if (c_retval == NULL) {
     status = napi_get_null(env, &n_retval);
     assert(status == napi_ok);
     return n_retval;
@@ -81,12 +80,11 @@ napi_value libvirt_virConnectOpen(napi_env env, napi_callback_info info) {
 }
 
 napi_value libvirt_virDomainLookupByName(napi_env env, napi_callback_info info) {
+  size_t argc = 2;
   napi_status status;
-  napi_value n_retval;
+  napi_value n_retval, args[argc];
   napi_valuetype valuetype;
 
-  size_t argc = 2;
-  napi_value args[2];
   status = napi_get_cb_info(env, info, &argc, args, NULL, NULL);
   assert(status == napi_ok);
 
@@ -117,16 +115,18 @@ napi_value libvirt_virDomainLookupByName(napi_env env, napi_callback_info info) 
     return NULL;
   }
 
-  char name[128];
-  size_t name_size = 128;
-  size_t copied;
-  status = napi_get_value_string_utf8(env, args[1], name, name_size, &copied);
+  size_t length;
+  status = napi_get_value_string_utf8(env, args[1], NULL, 0, &length);
+  assert(status == napi_ok);
+
+  char name[length+1];
+  status = napi_get_value_string_utf8(env, args[1], name, sizeof(name), NULL);
   assert(status == napi_ok);
 
   virDomainPtr c_retval;
   c_retval = virDomainLookupByName(conn, name);
 
-  if(c_retval == NULL) {
+  if (c_retval == NULL) {
     status = napi_get_null(env, &n_retval);
     assert(status == napi_ok);
     return n_retval;
