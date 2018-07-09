@@ -1,5 +1,5 @@
 #pragma once
 
-#include "connect.h"
+#include "host.h"
 #include "domain.h"
 
