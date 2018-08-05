@@ -1,31 +1,24 @@
 let fs = require('fs');
-let gen_headers = require('./gen_headers');
-let {libvirt_parser} = require('../../parser');
+let { libvirt_parser } = require('../../parser');
+let { headers_emitter } = require('../../emitters');
+let { allowed_functions } = require('../../whitelist');
 
 let src_path = 'src';
 let generated_path = 'generated';
-let override_path = `${src_path}/override`;
+
+require('./default');
 
 module.exports = new class {
-  generate(header_file) {
-    let generated_headers = gen_headers.generate(libvirt_parser, header_file);
-    let override_headers = '';
-    try {
-        override_headers = fs.readFileSync(`${override_path}/${header_file}.h`);
-    } catch (e) {}
-
-    let h_file = `
-    #pragma once
-
-    #include <node_api.h>
-
-    /* The following declarations are generated */
-    ${generated_headers}
-
-    /* The following declarations are overridden */
-    ${override_headers}
-    `;
-
-    fs.writeFileSync(`${generated_path}/${header_file}.h`, h_file);
-  };
-}
+    generate(header_file) {
+        let out = `
+            #pragma once
+            #include <node_api.h>
+        `;
+        for (let func of Object.values(libvirt_parser.functions)) {
+            if(allowed_functions[func.name] === header_file) {
+                out += headers_emitter.emit(func.name, func);
+            }
+        }
+        fs.writeFileSync(`${generated_path}/${header_file}.h`, out);
+    }
+};

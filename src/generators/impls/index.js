@@ -11,7 +11,7 @@ module.exports = new class {
     let generated_impl = gen_impl.generate(libvirt_parser, impl_file);
     let override_impl = '';
     try {
-    	fs.readFileSync(`${override_path}/${impl_file}.c`);
+    	override_impl = fs.readFileSync(`${override_path}/${impl_file}.c`);
     } catch(e) {}
 
     let cpp = `

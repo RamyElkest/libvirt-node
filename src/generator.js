@@ -19,8 +19,17 @@ exports_generator.generate()
 
 // Generate functions
 let files = [
-  'host',
-  'domain'
+    "domain",
+    "domain-snapshot",
+    "event",
+    "host",
+    "interface",
+    "network",
+    "nodedev",
+    "nwfilter",
+    "secret",
+    "storage",
+    "stream",
 ];
 
 files.forEach(file => {
