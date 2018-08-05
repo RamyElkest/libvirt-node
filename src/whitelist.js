@@ -1,14 +1,14 @@
-let allowed_functions = {
-	'virConnectOpen': 'host',
-	'virConnectClose': 'host',
-	'virConnectGetURI': 'host',
-	'virDomainLookupByName': 'host',
-	'virDomainGetID': 'domain',
-	'virDomainCreateXML': 'host',
-	'virDomainGetOSType': 'domain',
-	'virDomainGetVcpusFlags': 'domain',
-};
+let whitelist = new Set([
+	'virConnectOpen',
+	'virConnectClose',
+	'virConnectGetURI',
+	'virDomainLookupByName',
+	'virDomainGetID',
+	'virDomainCreateXML',
+	'virDomainGetOSType',
+	'virDomainGetVcpusFlags',
+]);
 
 module.exports = {
-	allowed_functions,
+	whitelist,
 };
