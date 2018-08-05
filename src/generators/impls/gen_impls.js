@@ -1,36 +1,7 @@
 let {allowed_functions} = require('../../whitelist');
 let args_generator = require('./gen_impls_args');
 let assert = require('assert');
-
-let CToNapiTypes = {
-    'virConnectPtr': 'napi_external',
-    'virDomainPtr' : 'napi_external',
-    'char *'       : 'napi_string',
-    'const char *' : 'napi_string',
-    'int'          : 'napi_number',
-    'unsigned int' : 'napi_number',
-};
-let NapiCreateFuncs = {
-    'napi_external': 'napi_create_external(env, c_retval, NULL, NULL, &n_retval)',
-    'napi_number': 'napi_create_int32(env, c_retval, &n_retval)',
-    'napi_string': 'napi_create_string_utf8(env, c_retval, strlen(c_retval), &n_retval)',
-};
-function isPtrType(type) {
-  return /(Ptr|\*)$/.test(type);
-}
-function getNapiType(type) {
-    if (CToNapiTypes[type] == null) {
-      throw new Error(`Type ${type} is not mapped to a napi type`);
-    }
-    return CToNapiTypes[type];
-}
-function getNapiCreateFunc(type) {
-    if (NapiCreateFuncs[getNapiType(type)] == null) {
-      throw new Error(`Type ${type} is not mapped to a napi create function`)
-    }
-    return NapiCreateFuncs[getNapiType(type)];
-}
-
+let { isPtrType, getNapiType, getNapiValueType, getNapiCreateFunc } = require('../types');
 
 module.exports = new class {
   genFunction(data) {
@@ -65,6 +36,7 @@ module.exports = new class {
 
       data.args.forEach((arg, idx) => {
           let napiType = getNapiType(arg.type);
+          let napiValueType = getNapiValueType(arg.type);
           // Type Check
           out += `
             // arg${idx}
@@ -78,7 +50,7 @@ module.exports = new class {
             }
           `;
 
-          out += args_generator.getGen(napiType)(arg, idx);
+          out += args_generator.getGen(napiValueType)(arg, idx);
       });
     }
 
@@ -119,8 +91,8 @@ module.exports = new class {
 
   generate(parser, filename) {
       let out = ``;
-      for (let func of Object.values(parser.functions).filter(f => f.file === `libvirt-${filename}`)) {
-          if(allowed_functions.has(func.name)) {
+      for (let func of Object.values(parser.functions)) {
+          if(allowed_functions[func.name] === filename) {
               out += this.genFunction(func);
           }
       }

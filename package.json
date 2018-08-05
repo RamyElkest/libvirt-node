@@ -10,10 +10,12 @@
     "build": "node-gyp rebuild",
     "test": "node test/libvirt.test.js",
     "clean": "rimraf build & rimraf generated",
-    "generate": "node src/generator.js",
+    "generate": "npm run generate:all && npm run generate:format",
+    "generate:all": "node src/generator.js",
+    "generate:format": "npx clang-format -i -style=Google generated/*",
+    "check": "npm run check:libvirt_min_ver & npm run check:libvirt_api_xml",
     "check:libvirt_api_xml": "node tools/api_xml_files.js",
-    "check:libvirt_min_ver": "node tools/check_min_libvirt_ver.js",
-    "check": "npm run check:libvirt_min_ver & npm run check:libvirt_api_xml"
+    "check:libvirt_min_ver": "node tools/check_min_libvirt_ver.js"
   },
   "repository": {
     "type": "git",
@@ -39,6 +41,7 @@
   "gypfile": true,
   "dependencies": {
     "bindings": "^1.3.0",
+    "clang-format": "^1.2.3",
     "which": "^1.3.1",
     "xml2js": "^0.4.19"
   }

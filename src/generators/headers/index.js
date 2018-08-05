@@ -9,7 +9,10 @@ let override_path = `${src_path}/override`;
 module.exports = new class {
   generate(header_file) {
     let generated_headers = gen_headers.generate(libvirt_parser, header_file);
-    let override_headers = fs.readFileSync(`${override_path}/${header_file}.h`);
+    let override_headers = '';
+    try {
+        override_headers = fs.readFileSync(`${override_path}/${header_file}.h`);
+    } catch (e) {}
 
     let h_file = `
     #pragma once
