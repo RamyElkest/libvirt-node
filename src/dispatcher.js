@@ -92,6 +92,11 @@ class Dispatcher {
                 this.descriptors['libvirt-exports'].export.process(func);
             }
         });
+
+        for(let [enumsType, enums] of Object.entries(parser.enums)) {
+            debug(`processing 'enums':${enumsType}`);
+            this.descriptors.libvirt.wrapper.processEnums(enumsType, enums);
+        };
     }
 }
 
