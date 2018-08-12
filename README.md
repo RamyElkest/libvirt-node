@@ -38,11 +38,11 @@ libvirt-node loosly mirrors the official [libvirt docs][libvirt_docs] with minor
 ### Coverage
 The API is still under development and not all libvirt functions are supported.
 
-[The whitelist][whitelist] has the implemented (and not yet implemented) functions.
+The [whitelist][whitelist] has the supported (and not yet supported) functions.
 
 ## Development
 
-For development documentation please refer to [DEVEOPMENT.md][development]
+For development documentation please refer to [DEVELOPMENT.md][development]
 
 ## License
 
