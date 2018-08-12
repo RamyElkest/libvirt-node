@@ -33,11 +33,18 @@ function test_virDomainGetID() {
   console.log("domain id is", id);
   return id;
 }
+function test_virConnectListAllDomains() {
+  let conn = libvirt.open('test:///default'),
+      doms  = conn.listAllDomains();
+  console.log("listAllDomains has", doms.length, "domain(s)");
+  return doms;
+}
 
 assert.doesNotThrow(() => test_virDomainLookupByName('test'), 'domain lookup with correct name');
 assert.doesNotThrow(() => test_virDomainLookupByName('test', 2, 'Three', 4), 'domain lookup with too many arguments');
 assert.throws(() => test_virDomainLookupByName('lasttest'), 'domain lookup with incorrect name');
 assert.throws(() => test_virDomainLookupByName(false), 'domain lookup with wrong argument type');
 assert.strictEqual(test_virDomainGetID(), 1);
+assert.strictEqual(test_virConnectListAllDomains()[0].getID(), 1);
 
 console.log('All tests passed!');
