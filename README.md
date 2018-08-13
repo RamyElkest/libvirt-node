@@ -51,6 +51,6 @@ libvirt-node is released under LGPL-2.1
 [libvirt_home]: http://www.libvirt.org
 [libvirt_docs]: https://libvirt.org/html/index.html
 [whitelist]: https://github.com/RamyElkest/libvirt-node/blob/master/src/whitelist.js
-[development]: https://github.com/RamyElkest/libvirt-node/blob/master/src/DEVELOPMENT.md
+[development]: https://github.com/RamyElkest/libvirt-node/blob/master/DEVELOPMENT.md
 [debug]: https://www.npmjs.com/package/debug
 [napi]: https://nodejs.org/api/n-api.html
