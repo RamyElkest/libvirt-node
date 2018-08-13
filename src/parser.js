@@ -1,7 +1,6 @@
-const fs = require('fs');
-const xml2js = require('xml2js');
-const api_files = require('../tools/api_xml_files');
-const { getInterfaceName } = require('./utils');
+let fs = require('fs');
+let xml2js = require('xml2js');
+let api_files = require('../tools/api_xml_files');
 
 class ApiParser {
     constructor(api_xml) {
@@ -43,7 +42,6 @@ class ApiParser {
         funcDescs.forEach(funcDesc => {
             this.functions[funcDesc.$.name] = {
                 ...funcDesc.$,
-                iname: getInterfaceName(funcDesc.$.name),
                 info: funcDesc.info[0],
                 args: (funcDesc.arg || []).map(f => f.$),
                 ret: (funcDesc.return || []).map(f => f.$),

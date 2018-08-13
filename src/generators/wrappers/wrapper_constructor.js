@@ -1,5 +1,4 @@
 const { wrapper_emitter } = require('../../emitters');
-const { fileToClass, CObjects } = require('../types');
 
 wrapper_emitter.register('libvirt:constructor', filename => '');
 wrapper_emitter.register('libvirt-connect:constructor', filename =>
@@ -15,8 +14,7 @@ wrapper_emitter.register('libvirt-domain-snapshot:constructor', filename =>
     }`
 );
 wrapper_emitter.register('[\\w-]+:constructor', filename => {
-    // TODO(ramyelkest@gmail.com): Remove Ptr hack..
-    const member = CObjects[fileToClass[filename]+'Ptr'].name;
+    const member = filename.replace(/[\w-]+-/, '');
     return `constructor(conn, ${member}) {
                 this.conn = conn;
                 this.${member} = ${member}

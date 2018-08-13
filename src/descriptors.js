@@ -22,8 +22,6 @@ class FileDescriptor {
             emitter: undefined,
             static: args.name === 'libvirt' ? 'static' : '',
         }, options);
-
-        this.processed = new Set();
     }
 
     /**
@@ -43,29 +41,12 @@ class FileDescriptor {
     }
 
     /**
-     * addProcessed does any validation required on the metadata
-     *
-     * @param {string} API entry exported name
-     */
-    addProcessed(name) {
-        debug(`descriptors:${this.args.name}`)(`addProcessed ${name}`);
-
-        if(this.processed.has(name)) {
-            throw new Error(`${name} has aleady been defined in
-                             ${this.arg.type} descriptor ${this.args.name}`);
-        }
-        this.processed.add(name);
-    }
-
-    /**
      * Processes parsed function metadata to generate content
      *
      * @param {object} function metadata from parser
      */
     process(func) {
         debug(`descriptors:${this.args.name}`)(`Processing ${func.name}`);
-
-        this.addProcessed(func.name); // TODO(ramyelkest@gmail.com): addProcessed should not be called from process
 
         this.addContent(
             this.options.emitter.emit(func.name, func)
@@ -169,8 +150,6 @@ class WrapperDescriptor extends FileDescriptor {
     process(func) {
         debug(`descriptors:${this.args.name}:${this.args.type}`)(`Processing ${func.name}`);
 
-        this.addProcessed(func.iname); // TODO(ramyelkest@gmail.com): addProcessed should not be called from process
-
         super.addDependency(
             this.options.emitter.emit(func.name+':dependencies', func)
         );
@@ -210,6 +189,8 @@ class WrapperDescriptor extends FileDescriptor {
 // wd.addContent(`
 //   /**
 //    * Get the hypervisor ID number for the domain
+//    *
+//    * TODO: params / returns
 //    */
 //   getID() {
 //     let ret = libvirt_native.virDomainGetID(this.domain);
@@ -220,6 +201,8 @@ class WrapperDescriptor extends FileDescriptor {
 // wd.addContent(`
 //   /**
 //    * Get the type of domain operation system.
+//    *
+//    * TODO: params / returns
 //    */
 //   getOSType() {
 //     let ret = libvirt_native.virDomainGetOSType(this.domain);
@@ -244,7 +227,6 @@ class ImplDescriptor extends FileDescriptor {
                     dependencies: [
                         `#include "${args.name}.h"`,
                         `#include <libvirt/libvirt.h>`,
-                        `#include <libvirt/virterror.h>`, // TODO(ramyelkest@gmail.com): is this needed?
                         `#include <assert.h>`,
                         `#include <string.h>`,
                     ],
