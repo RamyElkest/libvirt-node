@@ -8,7 +8,7 @@
     "postinstall": "node-gyp rebuild",
     "prebuild": "npm run clean && npm run generate",
     "build": "node-gyp rebuild",
-    "test": "node test/libvirt.test.js",
+    "test": "npx mocha",
     "clean": "rimraf build & rimraf generated",
     "generate": "npm run generate:all && npm run generate:format",
     "generate:all": "node src/main.js",
@@ -44,6 +44,7 @@
     "bindings": "^1.3.0",
     "clang-format": "^1.2.4",
     "debug": "^3.1.0",
+    "mocha": "^5.2.0",
     "which": "^1.3.1",
     "xml2js": "^0.4.19"
   }
