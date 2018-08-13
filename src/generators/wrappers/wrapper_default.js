@@ -1,15 +1,10 @@
 const { wrapper_emitter } = require('../../emitters');
 const { CObjects } = require('../types');
 
-function classifyFuncName(name) {
-  let fn = name.replace(/^vir[A-Z]+[a-z]+/,'');
-  return fn[0].toLowerCase() + fn.substr(1);
-}
-
 wrapper_emitter.register('vir[\\w]+ListAll[\\w]+', data => {
     let classType = data.args[1].type.replace(' **', '');
     let out =
-       `${classifyFuncName(data.name)}(flags)
+       `${data.iname}(flags)
         {
             let retList = libvirt_native.${data.name}(this.${data.args[0].name}, flags = 0);
             if(retList == null) throw new Error('${data.name}() failed');
@@ -20,9 +15,9 @@ wrapper_emitter.register('vir[\\w]+ListAll[\\w]+', data => {
 });
 
 wrapper_emitter.registerDefault(data => {
-    let c_arg = (arg) => `${CObjects.hasOwnProperty(arg.type) ? CObjects[arg.type].arg : arg.name}`;
+    let c_arg = (arg) => `${CObjects.hasOwnProperty(arg.type) ? 'this.'+CObjects[arg.type].name : arg.name}`;
     let out =
-       `${classifyFuncName(data.name)}(${data.args.filter(arg => !CObjects.hasOwnProperty(arg.type))
+       `${data.iname}(${data.args.filter(arg => !CObjects.hasOwnProperty(arg.type))
                                                   .map(arg =>  arg.name)
                                                   .join(', ')})
         {
