@@ -1,0 +1,1 @@
+require('./get_uuid_string');
