@@ -2,7 +2,7 @@
   "name": "libvirt-node",
   "version": "0.1.0",
   "description": "The libvirt virtualization API node.js binding",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "install": "npm run check & npm run generate",
     "postinstall": "node-gyp rebuild",
