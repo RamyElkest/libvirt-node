@@ -163,6 +163,25 @@ function getInterfaceName(funcName) {
     return fixedName;
 }
 
+/**
+ * Overrides XML function information
+ *
+ * This avoids a collision in names
+ *
+ * @param {Object} function description from XML api
+ * @return {Array} array for function information
+ */
+function getFunctionArgs(funcDesc) {
+    let funcArgs = (funcDesc.arg || []).map(f => f.$);
+
+    if(funcDesc.$.name.endsWith('GetUUIDString')) {
+        funcArgs.pop();
+    }
+
+    return funcArgs;
+}
+
 module.exports = {
     getInterfaceName,
+    getFunctionArgs,
 };
