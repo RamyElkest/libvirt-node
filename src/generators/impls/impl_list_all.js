@@ -59,13 +59,13 @@ impl_emitter.register('vir[\\w]+ListAll[\\w]+', (func) => {
             }
         `;
 
-        out += args_generator.getGen(napiValueType)(func.args[2], 1);
+        out += args_generator.getGen(napiValueType)(func.args[2], 2);
     }
 
     // perform C call
     out += `
-        ${func.args[1].type.replace('**', '*')} list = NULL;
-        ${func.ret[0].type} c_retval = ${func.name}(arg0, &list, arg1);
+        ${func.args[1].type.replace('**', '*')} arg1 = NULL;
+        ${func.ret[0].type} c_retval = ${func.name}(arg0, &arg1, arg2);
     `;
 
     // return if null ptr
@@ -83,7 +83,7 @@ impl_emitter.register('vir[\\w]+ListAll[\\w]+', (func) => {
 
         int i = 0;
         for(; i < c_retval; ++i) {
-            status = napi_create_external(env, list[i], NULL, NULL, &temp_val);
+            status = napi_create_external(env, arg1[i], NULL, NULL, &temp_val);
             assert(status == napi_ok);  
 
             status = napi_set_element(env, n_retval, i, temp_val);
