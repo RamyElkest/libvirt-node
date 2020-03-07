@@ -25,6 +25,5 @@ RUN echo "deb http://security.debian.org/ jessie/updates main contrib" >> /etc/a
   make -j3 && \
   make install
 COPY . .
-# ENTRYPOINT [ "/bin/bash" ]
 RUN make && make check
 
