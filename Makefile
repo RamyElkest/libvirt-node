@@ -15,3 +15,6 @@ clean:
 
 check:
 	$(NPM) run test
+
+docker:
+	docker build .

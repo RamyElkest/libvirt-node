@@ -44,6 +44,11 @@ The [whitelist][whitelist] has the supported (and not yet supported) functions.
 
 For development documentation please refer to [DEVELOPMENT.md][development]
 
+## Build in docker container
+If you already installed docker locally, you can check build by
+
+    make docker
+
 ## License
 
 libvirt-node is released under LGPL-2.1
