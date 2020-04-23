@@ -70,9 +70,14 @@ describe('libvirt-domain', function() {
             assert.strictEqual(this.domain.setVcpus(1), 0);
             assert.strictEqual(this.domain.getVcpusFlags(0), 1);
         });
-        it('should set/get MaxMemory', function() {
+        it('should not set MaxMemory while active', function() {
+            assert.strictEqual(this.domain.setMaxMemory(150000), -1);
+        });
+        it('should set/get MaxMemory while shut down', function() {
+            assert.strictEqual(this.domain.shutdown(), 0);
             assert.strictEqual(this.domain.setMaxMemory(100000), 0);
             assert.strictEqual(this.domain.getMaxMemory(0), 100000);
+            assert.strictEqual(this.domain.create(), 0);
         });
     });
 
