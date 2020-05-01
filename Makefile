@@ -17,4 +17,4 @@ check:
 	$(NPM) run test
 
 docker:
-	docker build .
+	docker build . -t libvirt-node:latest && docker run --rm -i -v /var/lib/docker.sock:/var/lib/docker.sock libvirt-node:latest
