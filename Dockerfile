@@ -38,5 +38,8 @@ RUN npm install --ignore-scripts
 COPY . .
 RUN npm install
 RUN npm run build
-RUN npm test
+
+# Needs access to /var/run/docker.sock, so is not run while building the docker image,
+# but rather when it is run with `docker run -v /var/run/docker.sock:...`
+CMD npm test
 
